@@ -14,11 +14,13 @@ namespace Parking
 
         private static int parkingSpace;
         private static double balance;
+        private static double interimBalance = 0;
         private static List<Car> cars = null;
         private static List<Transaction> transactions;
 
         public static int ParkingSpace { get { return parkingSpace; } private set { parkingSpace = value; } }
         public static double Balance { get { return balance; } set { balance = value; } }
+        public static double InterimBalance { get { return interimBalance; } set { interimBalance = value; } }
 
         public  static List<Car> Cars { get { return cars; } private set { } }
         public static List<Transaction> Transactions { get { return transactions; } private set { } }
@@ -62,6 +64,19 @@ namespace Parking
                 }
             }
             return false;
+        }
+
+        public static void PrintTransactions()
+        {
+            foreach (Transaction tr in Transactions.ToArray())
+            {
+                Console.WriteLine("------------------------------");
+                Console.WriteLine("Current time: {0}", DateTime.Now);
+                Console.WriteLine("Transaction time: {0}", tr.DateTimeTransaction);
+                Console.WriteLine("Car id: {0}", tr.CarId);
+                Console.WriteLine("Written-off funds: {0}", tr.WrittenOff_Funds);
+                Console.WriteLine("------------------------------");
+            }
         }
     }
 }

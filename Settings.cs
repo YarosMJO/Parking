@@ -9,12 +9,14 @@ namespace Parking
     {
         private static Timer aTimer,bTimer;
 
+        private static readonly int parkingSpaceLimit = 20;
+        private static int parkingSpace = parkingSpaceLimit;
         private static readonly string LOGPATH = "D:/Transaction.log";
-        private static int parkingSpace = 20;
         private static double fine = 0.5;
 
-        public static int ParkingSpace { get { return parkingSpace; } private set { parkingSpace = value; } }
-        public static double Fine { get { return fine; } set { fine = value; } }
+        public static int ParkingSpace { get { return parkingSpace; } private set { parkingSpace = value; } }       
+        public static double Fine { get { return fine; } private set { fine = value; } }
+        
         public static readonly Dictionary<string, int> carPrices 
             = new Dictionary<string, int>
             {   
@@ -51,6 +53,7 @@ namespace Parking
             lock (locker)
             {
                 double money = 0;
+                Parking.InterimBalance = 0;
                 foreach (Car car in Parking.Cars)
                 {
                     foreach (KeyValuePair<string, int> entry in carPrices)
@@ -62,6 +65,7 @@ namespace Parking
                                 money = Fine * carPrices[sCarType];
                             else money = entry.Value;
 
+                            Parking.InterimBalance += money;
                             Parking.Balance += money;
                             car.Balance -= money;
 
@@ -82,7 +86,6 @@ namespace Parking
             object locker = new object();
             lock (locker)
             {
-                double sum = 0;
                 DateTime currentTime = DateTime.Now;
 
                 using (StreamWriter w = File.AppendText(LOGPATH))
@@ -91,12 +94,13 @@ namespace Parking
                     {
                         TimeSpan tsp = tr.DateTimeTransaction - currentTime;
                         if (tsp.TotalMinutes <= 1) {
-                            sum += tr.WrittenOff_Funds;
+                            Parking.Balance += tr.WrittenOff_Funds;
                         }
                     }
-                    w.WriteLine("Current time:{0} Transaction sum:{1}", DateTime.Now, sum);
-
+                    w.WriteLine("Current time:{0} Transaction sum:{1}", DateTime.Now, Parking.Balance);
+                    Parking.Transactions.Clear();
                 }
+
             }
         }
         public static void LogReader()

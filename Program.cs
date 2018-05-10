@@ -8,12 +8,20 @@ namespace Parking
         static void Main(string[] args)
         {
             Parking parking = Parking.Instance;
-            Car Truck = new Car();
-            Truck.Type = CarTypes.Truck;
-            Truck.Balance = 20;
-            Car Motorcycle = new Car();
-            Motorcycle.Type = CarTypes.Motorcycle;
-            Motorcycle.Balance = 20;
+
+            Car Truck = new Car
+            {
+                Type = CarTypes.Truck,
+                Balance = 20,
+                Id = 1
+            };
+
+            Car Motorcycle = new Car
+            {
+                Type = CarTypes.Motorcycle,
+                Balance = 20,
+                Id = 2
+            };
 
             Parking.AddCar(Truck);
             Parking.AddCar(Motorcycle);
@@ -21,9 +29,12 @@ namespace Parking
             //try with 3 cars
             Thread.Sleep(5000);
 
-            Car Bus = new Car();
-            Bus.Type = CarTypes.Bus;
-            Bus.Balance = 1;
+            Car Bus = new Car
+            {
+                Type = CarTypes.Bus,
+                Balance = 1,
+                Id = 3
+            };
             Parking.AddCar(Bus);
             
             //try with 2 cars again
@@ -42,6 +53,11 @@ namespace Parking
             Console.WriteLine("Parking space: "+Parking.ParkingSpace);
             
             Settings.LogReader();
+
+            Console.WriteLine("Parking balance{0}: ", Parking.Balance);
+            Console.WriteLine("Interim  balance{0}: ", Parking.InterimBalance);
+            Thread.Sleep(35000);
+            Parking.PrintTransactions();
             Console.ReadKey();
         }
     }

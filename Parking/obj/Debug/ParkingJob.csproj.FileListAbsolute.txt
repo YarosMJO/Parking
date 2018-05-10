@@ -1,7 +1,0 @@
-C:\Users\myhaj\source\repos\Parking\Parking\obj\Debug\ParkingJob.csprojResolveAssemblyReference.cache
-C:\Users\myhaj\source\repos\Parking\Parking\obj\Debug\ParkingJob.csproj.CoreCompileInputs.cache
-C:\Users\myhaj\source\repos\Parking\Parking\bin\Debug\Parking.exe.config
-C:\Users\myhaj\source\repos\Parking\Parking\bin\Debug\Parking.exe
-C:\Users\myhaj\source\repos\Parking\Parking\bin\Debug\Parking.pdb
-C:\Users\myhaj\source\repos\Parking\Parking\obj\Debug\Parking.exe
-C:\Users\myhaj\source\repos\Parking\Parking\obj\Debug\Parking.pdb
