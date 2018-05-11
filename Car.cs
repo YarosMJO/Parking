@@ -1,8 +1,6 @@
-﻿using System.Collections;
-
-namespace Parking
+﻿namespace Parking
 {
-   public class Car: IEnumerable
+    public class Car
     {
         private int id;
         private double balance;
@@ -11,10 +9,5 @@ namespace Parking
         public int Id{ get { return id; } set { id = value; } }
         public double Balance { get { return balance; } set { balance = value; } }
         public  CarTypes Type{ get { return type; } set { type = value; } }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            yield return id;
-        }
     }
 }

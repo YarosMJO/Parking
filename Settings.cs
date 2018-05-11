@@ -8,11 +8,13 @@ namespace Parking
     static class Settings
     {
         private static Timer aTimer,bTimer;
+        static object locker = new object();
+        static object locker1 = new object();
 
-        private static readonly int parkingSpaceLimit = 20;
+        public static readonly int parkingSpaceLimit = 20;
         private static int parkingSpace = parkingSpaceLimit;
-        private static readonly string LOGPATH = "D:/Transaction.log";
-        private static double fine = 0.5;
+        private static readonly string LOGPATH = "Transaction.log";
+        private static double fine = 1.2;
 
         public static int ParkingSpace { get { return parkingSpace; } private set { parkingSpace = value; } }       
         public static double Fine { get { return fine; } private set { fine = value; } }
@@ -22,39 +24,35 @@ namespace Parking
             {   
                 { "Truck", 5 },
                 { "Passenger", 3},
-                { "Bus",2},
-                {"Motorcycle",1}
+                { "Bus", 2},
+                { "Motorcycle", 1}
             };
 
         public static int TimeOut
         {
             set
             {
-                aTimer = new Timer(value = 3000);
+                aTimer = new Timer(3000);
                 aTimer.Elapsed += new ElapsedEventHandler(Count);
                 aTimer.Enabled = true;
-
             }
         }
         public static int LogTime
         {
             set
             {
-                bTimer = new Timer(value = 60000);
+                bTimer = new Timer(60000);
                 bTimer.Elapsed += new ElapsedEventHandler(LogWriter);
                 bTimer.Enabled = true;
-
             }
         }
 
         private static void Count(object obj,EventArgs e)
         {
-            object locker = new object();
             lock (locker)
             {
                 double money = 0;
-                Parking.InterimBalance = 0;
-                foreach (Car car in Parking.Cars)
+                foreach (Car car in Parking.Cars.ToArray())
                 {
                     foreach (KeyValuePair<string, int> entry in carPrices)
                     {
@@ -65,26 +63,21 @@ namespace Parking
                                 money = Fine * carPrices[sCarType];
                             else money = entry.Value;
 
-                            Parking.InterimBalance += money;
+                            Parking.CurrentBalance += money;
                             Parking.Balance += money;
                             car.Balance -= money;
 
                             Parking.Transactions.Add(new Transaction(car.Id, DateTime.Now, money));
 
-                            Console.WriteLine(car.Balance);
                         }
-
                     }
                 }
             }
         }
 
-    
-
         public static void LogWriter(object obj, EventArgs e)
         {
-            object locker = new object();
-            lock (locker)
+            lock (locker1)
             {
                 DateTime currentTime = DateTime.Now;
 
@@ -99,18 +92,19 @@ namespace Parking
                     }
                     w.WriteLine("Current time:{0} Transaction sum:{1}", DateTime.Now, Parking.Balance);
                     Parking.Transactions.Clear();
+                    Parking.CurrentBalance = 0;
                 }
-
+                
             }
+            
         }
         public static void LogReader()
-        {
-            object locker = new object();
-            lock (locker)
+        {       
+            lock (locker1)
             {
                 if (!File.Exists(LOGPATH))
                 {
-                    Console.WriteLine("Sory... transaction log file not created yet. ");
+                    Console.WriteLine("Sorry... transaction log file not created yet. ");
                     return;
                 }
                 using (StreamReader r = File.OpenText(LOGPATH))
@@ -128,7 +122,5 @@ namespace Parking
                 Console.WriteLine(line);
             }
         }
-
     }
-
 }
