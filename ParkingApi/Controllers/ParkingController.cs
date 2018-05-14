@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace ParkingApi.Controllers
 {
@@ -18,7 +17,7 @@ namespace ParkingApi.Controllers
         [HttpGet]
         [Route("free_spaces")]
         public ActionResult GetFreeSpaces()
-        { 
+        {
             return Ok(Parking.Parking.ParkingSpace);
         }
 
@@ -26,7 +25,7 @@ namespace ParkingApi.Controllers
         [Route("occupied_spaces")]
         public ActionResult GetOccupiedSpaces()
         {
-            return Ok(Parking.Parking.ParkingSpace);//change to occupied
+            return Ok(Parking.Parking.OccupiedSpacesCount());
         }
     }
 }

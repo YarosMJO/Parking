@@ -33,6 +33,7 @@ namespace Parking
                 aTimer.Enabled = true;
             }
         }
+
         public static int LogTime
         {
             set
@@ -42,7 +43,6 @@ namespace Parking
                 bTimer.Enabled = true;
             }
         }
-
-        
+    
     }
 }

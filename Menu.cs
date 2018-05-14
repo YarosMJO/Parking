@@ -95,7 +95,7 @@ namespace Parking
                         Console.WriteLine("Free parking spaces: {0}", Parking.ParkingSpace);
                         break;
                     case "9":
-                        Console.WriteLine("Occupied parking spaces: {0}/{1}",Settings.parkingSpaceLimit - Parking.ParkingSpace,
+                        Console.WriteLine("Occupied parking spaces: {0}/{1}",Parking.OccupiedSpacesCount(),
                            Settings.parkingSpaceLimit);
                         break;
                     case "10":

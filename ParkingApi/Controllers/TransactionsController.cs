@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Parking;
 
@@ -19,25 +10,14 @@ namespace ParkingApi.Controllers
     {
         [HttpGet]
         [Route("transaction_logs")]
-        public ActionResult GetTransactions()// занести в паркінг
+        public ActionResult GetTransactions()
         {
-            string sLine = "";
-            ArrayList arrText = new ArrayList();
-            using (StreamReader objReader = new StreamReader("Transaction.log"))
-            {
-                while (sLine != null)
-                {
-                    sLine = objReader.ReadLine();
-                    if (sLine != null)
-                        arrText.Add(sLine);
-                }
-            }
-            return Ok(arrText);
+            return Ok(Parking.Parking.ReadTransactions());
         }
 
         [HttpGet]
         [Route("current_transactions")]
-        public ActionResult GetCurrentTransaction()
+        public ActionResult GetCurrentTransactions()
         {
             List<Transaction> transactions = Parking.Parking.Transactions;
             if (transactions.Count == 0) return Ok("There are no transactions on parking yet");
@@ -46,10 +26,10 @@ namespace ParkingApi.Controllers
         }
 
         [HttpGet]
-        [Route("current_transaction")]
-        public ActionResult GetCarCurrentTransaction(int id)
+        [Route("car_current_transactions")]
+        public ActionResult GetCarCurrentTransactions(int id)
         {
-            List<Transaction> carTransactions =  Parking.Parking.Transactions.FindAll(tr => tr.CarId == id);
+            List<Transaction> carTransactions = Parking.Parking.Transactions.FindAll(tr => tr.CarId == id);
             if (carTransactions == null) return Ok("There are no transactions for this car yet");
 
             return Ok(carTransactions);
@@ -65,6 +45,6 @@ namespace ParkingApi.Controllers
 
             return Ok(dcar);
         }
-        
+
     }
 }

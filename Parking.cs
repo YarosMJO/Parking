@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,13 +21,14 @@ namespace Parking
         private static int parkingSpace;
         private static double balance;
         private static double interimBalance = 0;
-       
+
         private static List<Car> cars = null;
         private static List<Transaction> transactions = null;
 
         public static int ParkingSpace { get { return parkingSpace; } private set { parkingSpace = value; } }
+        public static int ParkingSpaceLimit { get { return parkingSpace; } private set { parkingSpace = value; } }
         public static double Balance { get { return balance; } set { balance = value; } }
-        public static double CurrentBalance { get { return interimBalance; } set { interimBalance = value; } }
+        public static double CurrentBalance { get { return interimBalance; } set { interimBalance = value; } }       
 
         public static List<Car> Cars { get { return cars; } private set { } }
         public static List<Transaction> Transactions { get { return transactions; } private set { } }
@@ -37,13 +39,14 @@ namespace Parking
             Instance.InitParking();
         }
 
-        private Parking(){}
+        private Parking() { }
 
         private void InitParking()
         {
             Settings.TimeOut = 3000;
             Settings.LogTime = 60000;
             ParkingSpace = Settings.ParkingSpace;
+            ParkingSpaceLimit = ParkingSpace;
             cars = new List<Car>(ParkingSpace);
             transactions = new List<Transaction>();
         }
@@ -125,21 +128,26 @@ namespace Parking
             }
         }
 
+        public static int OccupiedSpacesCount()
+        {
+            return Settings.parkingSpaceLimit - ParkingSpace;
+        }
 
         public static bool AddCar(Car newCar)
         {
-            if(Cars.Any(car => car.Id == newCar.Id))
+            if (Cars.Any(car => car.Id == newCar.Id))
             {
                 Console.WriteLine("Such car already exists. Try another car(id).");
                 return false;
             }
-            else if (newCar != null && Settings.ParkingSpace > Cars.Count )
+            else if (newCar != null && Settings.ParkingSpace > Cars.Count)
             {
                 cars.Add(newCar);
                 ParkingSpace--;
                 Console.WriteLine("Car successfully added.");
                 return true;
-            }else Console.WriteLine("Can't add new car");
+            }
+            else Console.WriteLine("Can't add new car");
             return false;
         }
 
@@ -159,6 +167,23 @@ namespace Parking
             Console.WriteLine("Can't remove car.\nThis usually happens when the car does not exist or the vehicle's balance is too low." +
                 "\nCheck request and try again.");
             return false;
+        }
+        public static ArrayList ReadTransactions()
+        {
+            string sLine = "";
+            ArrayList arrText = new ArrayList();
+
+            using (StreamReader objReader = new StreamReader("Transaction.log"))
+            {
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                        arrText.Add(sLine);
+                }
+            }
+
+            return arrText;
         }
 
         public static void PrintTransactions()

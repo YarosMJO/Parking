@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Transaction.log" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
