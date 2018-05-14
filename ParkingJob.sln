@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingJob", "ParkingJob.csproj", "{0167FDFB-6C2C-46DE-B5A0-E11C6D8B9DC0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkingApi", "ParkingApi\ParkingApi.csproj", "{B3D16712-7ADE-4F8E-AB6A-D50788CDC5C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0167FDFB-6C2C-46DE-B5A0-E11C6D8B9DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0167FDFB-6C2C-46DE-B5A0-E11C6D8B9DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0167FDFB-6C2C-46DE-B5A0-E11C6D8B9DC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D16712-7ADE-4F8E-AB6A-D50788CDC5C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D16712-7ADE-4F8E-AB6A-D50788CDC5C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D16712-7ADE-4F8E-AB6A-D50788CDC5C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D16712-7ADE-4F8E-AB6A-D50788CDC5C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
