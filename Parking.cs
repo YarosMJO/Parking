@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Parking
@@ -12,6 +13,9 @@ namespace Parking
         {
             get { return lazy.Value; }
         }
+
+        static object locker = new object();
+        static object locker1 = new object();
 
         private static int parkingSpace;
         private static double balance;
@@ -44,20 +48,98 @@ namespace Parking
             transactions = new List<Transaction>();
         }
 
+        public static void Count(object obj, EventArgs e)
+        {
+            lock (locker)
+            {
+                double money = 0;
+                foreach (Car car in Cars.ToArray())
+                {
+                    foreach (KeyValuePair<string, int> entry in Settings.carPrices)
+                    {
+                        String sCarType = Convert.ToString(car.Type);
+                        if (sCarType == entry.Key)
+                        {
+                            if (car.Balance < entry.Value)
+                                money = Settings.Fine * Settings.carPrices[sCarType];
+                            else money = entry.Value;
+
+                            CurrentBalance += money;
+                            Balance += money;
+                            car.Balance -= money;
+
+                            Transactions.Add(new Transaction(car.Id, DateTime.Now, money));
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void LogWriter(object obj, EventArgs e)
+        {
+            lock (locker1)
+            {
+                DateTime currentTime = DateTime.Now;
+
+                using (StreamWriter w = File.AppendText(Settings.LOGPATH))
+                {
+                    foreach (Transaction tr in Transactions.ToArray())
+                    {
+                        TimeSpan tsp = tr.DateTimeTransaction - currentTime;
+                        if (tsp.TotalMinutes <= 1)
+                        {
+                            Balance += tr.WrittenOff_Funds;
+                        }
+                    }
+                    w.WriteLine("Current time:{0} Transaction sum:{1}", DateTime.Now, Balance);
+                    Transactions.Clear();
+                    CurrentBalance = 0;
+                }
+
+            }
+
+        }
+        public static void LogReader()
+        {
+            lock (locker1)
+            {
+                if (!File.Exists(Settings.LOGPATH))
+                {
+                    Console.WriteLine("Sorry... transaction log file not created yet. ");
+                    return;
+                }
+                using (StreamReader r = File.OpenText(Settings.LOGPATH))
+                {
+                    DumpLog(r);
+                }
+            }
+        }
+
+        public static void DumpLog(StreamReader r)
+        {
+            string line;
+            while ((line = r.ReadLine()) != null)
+            {
+                Console.WriteLine(line);
+            }
+        }
+
+
         public static bool AddCar(Car newCar)
         {
             if(Cars.Any(car => car.Id == newCar.Id))
             {
                 Console.WriteLine("Such car already exists. Try another car(id).");
+                return false;
             }
-            if (newCar != null && Settings.ParkingSpace > Cars.Count )
+            else if (newCar != null && Settings.ParkingSpace > Cars.Count )
             {
                 cars.Add(newCar);
                 ParkingSpace--;
                 Console.WriteLine("Car successfully added.");
                 return true;
-            }
-            Console.WriteLine("Can't add new car");
+            }else Console.WriteLine("Can't add new car");
             return false;
         }
 

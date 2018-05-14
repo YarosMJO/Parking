@@ -83,7 +83,7 @@ namespace Parking
                         Parking.PrintTransactions();
                         break;
                     case "5":
-                        Settings.LogReader();
+                        Parking.LogReader();
                         break;
                     case "6":
                         Console.WriteLine("Total parking balance:{0}",Parking.Balance);
