@@ -1,2 +1,2 @@
-# Parking 
-### A program that simulates the parking lot. Download here: https://github.com/YarosMJO/Parking/raw/develop/bin/Debug/Parking.exe
+# Parking API
+### ASP.NET Core Web API that allows connect to the parking  emulation program. 
