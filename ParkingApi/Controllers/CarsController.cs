@@ -14,7 +14,7 @@ namespace ParkingApi.Controllers
         {
 
             if (Parking.Parking.Cars.Count == 0)
-                return Ok("No cars on parking");
+                return NotFound("No cars on parking");
 
             return Ok(Parking.Parking.Cars);
         }
@@ -30,31 +30,25 @@ namespace ParkingApi.Controllers
             return Ok(dcar);
         }
 
-        // POST: api/cars/add 
+        // POST: api/cars
         [HttpPost]
-        [Route("add")]
-        public ActionResult AddCar(int id, CarTypes type, int balance = 0)
+        [Route("")]
+        public ActionResult AddCar([FromBody]Car car)
         {
-            Car car = new Car()
-            {
-                Id = id,
-                Type = type,
-                Balance = balance
-            };
             if (Parking.Parking.AddCar(car)) return Ok("Car successfully added.");
             return Ok("Can't add car. Perhaps it already exist.");
         }
         // DELETE: api/cars/delete 
         [HttpDelete]
-        [Route("delete")]
+        [Route("")]
         public ActionResult DeleteCar(int id)
         {
             if (Parking.Parking.Cars.Any(car => car.Id == id))
             {
                 Parking.Parking.RemoveCar(id);
-                return Ok("Car successfully removed.");
+                return NoContent();
             }
-            else return Ok("No such car on parking");
+            else return NotFound("No such car on parking");
         }
     }
 }
